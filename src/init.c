@@ -1,7 +1,6 @@
 #include "init.h"
-#include "defs.h"
 
-void Allinit(){
+void AllInit(){
   InitSq120To64();
 }
 

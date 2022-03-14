@@ -3,7 +3,7 @@
 
 #include "defs.h"
 
-void Allinit();
+void AllInit();
 void InitSq120To64();
 
 int Sq120ToSq64[BRD_SQ_NUM];
