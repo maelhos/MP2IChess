@@ -1,6 +1,7 @@
 #include "init.h"
 
 void AllInit(){
+  init_zobrist();
   InitSq120To64();
 }
 

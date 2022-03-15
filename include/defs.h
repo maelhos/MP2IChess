@@ -1,5 +1,4 @@
-#ifndef DEFS_H
-#define DEFS_H
+#pragma once
 
 #include <stdlib.h>
 
@@ -25,7 +24,4 @@ if (!(n)) { \
   printf("In File %s, ",__FILE__); \
   printf("At Line %d\n",__LINE__); \
   exit(1);}
-#endif
-
-
 #endif

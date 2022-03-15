@@ -3,29 +3,78 @@
 
 
 void initBoardToDefault(S_Board* board){
-  int pieces[BRD_SQ_NUM];
-  U64 pawns[3]; // 3 because 3 colors, make things faster and easier
+  board->pieces[A1] = wR;
+  board->pieces[B1] = wN;
+  board->pieces[C1] = wB;
+  board->pieces[D1] = wQ;
+  board->pieces[E1] = wK;
+  board->pieces[F1] = wB;
+  board->pieces[G1] = wN;
+  board->pieces[H1] = wR;
 
-  int KingSq[2]; // position of the kings
-  int side; // side to move
+  board->pieces[A8] = bR;
+  board->pieces[B8] = bN;
+  board->pieces[C8] = bB;
+  board->pieces[D8] = bQ;
+  board->pieces[E8] = bK;
+  board->pieces[F8] = bB;
+  board->pieces[G8] = bN;
+  board->pieces[H8] = bR;
 
-  int enPas; // enPassant (if possible)
-  int fiftyMove; // draw by 50 move repetition
-
-  int ply;
-  int hisPlay; // total number of plys
-
-  int castlePerm; // castle rights for both
-
-  U64 posKey; // Zobrist hash of the position
-
-  int pceNum[13]; // number of each pieces
-  int bigPce[3]; // store pieces that are not pawns
-  int majPce[3]; // rooks and queens
-  int minPce[3]; // knights and bishops
+  for (int rank = RANK_6; rank >= RANK_3; rank--){
+    for (int file = FILE_A; file <= FILE_H; file++)
+    {
+        board->pieces[FR2SQ(file,rank)] = EMPTY;
+    }
+  }
   
-  S_MoveStack history;
+  //////
 
-  int pList[13][10];
-  // pList[wN][4] = E1 (exemple)
+  for (int i = A2; i <= H2; i++)
+  {
+    board->pieces[i] = wP;
+    board->pieces[i+50] = bP;
+    board->pawns[WHITE] |= (1ULL << SQ64(i));
+    board->pawns[BLACK] |= (1ULL << SQ64(i+50));
+  }
+  setpListAndPce(board);
+
+  setKingPos(board);
+
+  board->side = WHITE;
+
+  board->enPas = 0; // enPassant (if possible)
+  board->fiftyMove = 0; // draw by 50 move repetition
+
+  board->ply = 0;
+  board->hisPlay = 0; // total number of plys
+
+  board->castlePerm = WKCA | WQCA | BQCA | BKCA; // castle rights for both
+
+  board->posKey = zobrist(board);
+  
+  board->history = createEmptyMoveStack();
+}
+
+void setpListAndPce(S_Board* board){
+  int counter[13] = {0};
+  for (int i = 0; i < 64; i++)
+  {
+    int tmp = board->pieces[SQ120(i)];
+    if (tmp != EMPTY){
+      board->pceNum[tmp]++;
+      board->pList[tmp][counter[tmp]] = SQ120(i);
+      counter[tmp]++;
+    }
+  }
+}
+
+void setKingPos(S_Board* board){
+  for (int i = 0; i < 64; i++)
+  {
+    if (board->pieces[SQ120(i)] == wK)
+      board->KingSq[WHITE] = SQ120(i);
+    else if (board->pieces[SQ120(i)] == bK)
+      board->KingSq[BLACK] = SQ120(i);
+  }
 }

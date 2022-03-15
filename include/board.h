@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include "defs.h"
 #include "init.h"
@@ -45,9 +46,6 @@ struct _S_Board{
   U64 posKey; // Zobrist hash of the position
 
   int pceNum[13]; // number of each pieces
-  int bigPce[3]; // store pieces that are not pawns
-  int majPce[3]; // rooks and queens
-  int minPce[3]; // knights and bishops
   
   S_MoveStack history;
 
@@ -56,3 +54,18 @@ struct _S_Board{
 
 };
 typedef struct _S_Board S_Board;
+
+#define HASH_LEN 64
+
+static U64 get64rand();
+
+U64 hashtab[HASH_LEN][13];
+
+void init_zobrist();
+U64 zobrist(S_Board* pieces);
+
+U64 zobristMv(int move, U64 old);
+
+void initBoardToDefault(S_Board* board);
+void setpListAndPce(S_Board* board);
+void setKingPos(S_Board* board);

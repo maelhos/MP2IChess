@@ -1,12 +1,15 @@
+#pragma once
 #include <stdio.h>
 #include "defs.h"
 #include "init.h"
 
+enum { m_MOVE, m_CAPTURE, m_CASTLE, m_PROMOTE};
+
 struct _mv{
-  int move;
-  int castlePerm;
-  int enPas;
-  int fiftyMove;
-  U64 posKey;
+  int tag;
+  int start;
+  int stop;
 };
-typedef struct _mv S_Move;
+typedef _mv* S_Move;
+
+void printMove(int move);
